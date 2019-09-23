@@ -1,0 +1,27 @@
+function sender_list() {
+  var inbox_threads = GmailApp.getInboxThreads();
+
+  var sender_array = new Array();
+
+  for (var i = 0; i < inbox_threads.length; i++) {
+    var message = inbox_threads[i].getMessages();
+    for (var x = 0; x < message.length; x++) {
+      var sender = message[x].getFrom();
+      if(sender_array.indexOf(sender) == -1){
+        sender_array.push(sender); 
+      }
+    }
+  }
+
+
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = spreadsheet.getSheetByName('sheet1');
+  sheet.clear();
+  sheet.appendRow(['Email Address']);
+  sender_array.sort();
+  var row = sheet.getLastRow() + 1;
+  for (var y = 0; y < sender_array.length; y++) {
+    sheet.getRange(row, 1).setValue(sender_array[y]);
+    row++;
+  }
+}
